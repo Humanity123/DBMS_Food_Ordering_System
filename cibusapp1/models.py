@@ -59,8 +59,8 @@ class Order(models.Model):
 								 choices=type_choices,
 								 default='C')
    
-    customer = models.ForeignKey(CustomUser)
-    restaurant = models.ForeignKey(CustomUser)
+    customer = models.ForeignKey(CustomUser,related_name='c')
+    restaurant = models.ForeignKey(CustomUser,related_name='r')
     
    
     def __str__(self):
