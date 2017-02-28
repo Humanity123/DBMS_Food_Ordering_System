@@ -65,4 +65,9 @@ class OrderDetails(models.Model):
 	dish=models.ForeignKey(Menu)
 	qty=models.IntegerField()
 
+class Cart(models.Model):
+	customer=models.ForeignKey(CustomUser)
+	dish=models.ForeignKey(Menu)
+	qty=models.IntegerField()
+
 # Create your models here.

@@ -9,8 +9,6 @@ class CustomerForm(forms.ModelForm):
         model = CustomUser
         fields = ('username', 'email', 'password' ,'first_name','last_name', 'contact','address')
 
-
-
 class RestForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
 
@@ -31,7 +29,6 @@ class MenuForm(forms.Form):
     category = forms.ChoiceField(choices=type_choices,widget=forms.Select(attrs={'class':'form-control'}), required = True)
 
 class OrderForm(forms.Form):
-	# price = forms.IntegerField(label = 'Price', required = True, widget=forms.TextInput(attrs={'class' : 'form-control'}))
 	type_choices = [
 		('NI', 'North Indian'),
 		('SI', 'South Indian'),
@@ -56,3 +53,7 @@ class ROrderDetailsForm(forms.Form):
 		
 	]
 	status = forms.ChoiceField(choices=type_choices,widget=forms.Select(attrs={'class':'form-control'}))
+
+class CDishForm(forms.Form):
+	qty = forms.IntegerField(min_value = 0, label = 'Quantity', widget=forms.TextInput(attrs={'class' : 'form-control'}))
+

@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^restaurant/add$', views.add_dish, name='add_dish'),
     url(r'^customer/catselect$', views.catselect, name='catselect'),
     url(r'^customer/restdish/(?P<username>\w{0,200})/(?P<category>\w{0,2})$', views.restdish, name='restdish'),
+    url(r'^customer/restdish/(?P<username>\w{0,200})/(?P<category>\w{0,2})/(?P<name>\w{0,200})$', views.restdishselect, name='restdishselect'),
     url(r'^restaurant/rorders$', views.rorders, name='rorders'),
     url(r'^restaurant/rorders/(?P<orderid>\d+)$', views.rorders_info, name='rorders_info'),
     url(r'^customer/myorder$', views.myorder, name='myorders'),

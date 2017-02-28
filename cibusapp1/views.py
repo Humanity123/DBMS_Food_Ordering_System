@@ -1,13 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .forms import CustomerForm, RestForm, MenuForm, OrderForm, ROrderDetailsForm
+from .forms import CustomerForm, RestForm, MenuForm, OrderForm, ROrderDetailsForm, CDishForm
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from .models import Menu, CustomUser, Order, OrderDetails
+from .models import Menu, CustomUser, Order, OrderDetails, Cart
 
 
 # Create your views here.
@@ -268,11 +268,40 @@ def searchres(request,c):
     # print query_result
     return render(request, 'cibusapp1/searchres.html', {'query_result': z,'category':c})
 
-
+@login_required(login_url='/cibusapp1/clogin/')
 def restdish(request,username,category):
-    
-    return HttpResponse("rest hai %s " %category)
+    if request.user.user_type == 'R':
+        return HttpResponse("Ma chuda bc")
+    cat_dishes = Menu.objects.filter(restaurant__username = username, category = category)
+    non_cat_dishes = Menu.objects.filter(restaurant__username = username).exclude(category = category)
 
+    return render(request, 'cibusapp1/restdish.html', {'cat_dishes': cat_dishes, 'non_cat_dishes':non_cat_dishes, 'username':username,'category':category})
+
+@login_required(login_url='/cibusapp1/clogin/')
+def restdishselect(request,username,category,name):
+    if request.user.user_type == 'R':
+        return HttpResponse("Ma chuda bc")
+
+    if request.method == 'POST':
+        cdish_form = CDishForm(data=request.POST)
+
+        if cdish_form.is_valid():
+            data = cdish_form.cleaned_data
+            c = Cart()
+            c.customer = request.user
+            c.dish = Menu.objects.filter(restaurant__username = username, category = category, name = name).first()
+            c.qty = data["qty"]
+            c.save()
+            cat_dishes = Menu.objects.filter(restaurant__username = username, category = category)
+            non_cat_dishes = Menu.objects.filter(restaurant__username = username).exclude(category = category)
+            return render(request, 'cibusapp1/restdish.html', {'cat_dishes': cat_dishes, 'non_cat_dishes':non_cat_dishes, 'username':username,'category':category})
+        else:
+            print cdish_form.errors
+            return HttpResponse("Unknown Error")
+    else:
+        cdish_form = CDishForm()
+
+    return render(request, 'cibusapp1/resetdishselect.html', {'cdish_form': cdish_form})
 
 # NOTE: COPIED IN RORDERS_INFO
 @login_required(login_url='/cibusapp1/rlogin/')
@@ -320,7 +349,6 @@ def rorders_info(request, orderid):
 def myorder(request):
     context = RequestContext(request)
     username = request.user.username
-    #result = Order.objects.raw('select * from Order where customer__username = %s order by status',username)
     result = Order.objects.filter(customer__username = username).order_by('status')
     return render(request, 'cibusapp1/order.html',{'result':result})
 
