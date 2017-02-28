@@ -57,3 +57,6 @@ class ROrderDetailsForm(forms.Form):
 class CDishForm(forms.Form):
 	qty = forms.IntegerField(min_value = 0, label = 'Quantity', widget=forms.TextInput(attrs={'class' : 'form-control'}))
 
+
+class cartForm(forms.Form):
+	temp = 'temp'

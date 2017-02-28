@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^restaurant/rorders/(?P<orderid>\d+)$', views.rorders_info, name='rorders_info'),
     url(r'^customer/myorder$', views.myorder, name='myorders'),
     url(r'^customer/myorder/(?P<orderid>\d+)$', views.orderinfo, name='orderinfo'),
+    url(r'^customer/cart/', views.cart, name='cart'),
     # url(r'^customer/catselect/searchres$', views.searchres, name='searchres'),
 
 ]

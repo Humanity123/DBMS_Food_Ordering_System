@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .forms import CustomerForm, RestForm, MenuForm, OrderForm, ROrderDetailsForm, CDishForm
+from .forms import CustomerForm, RestForm, MenuForm, OrderForm, ROrderDetailsForm, CDishForm, cartForm
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login
@@ -64,7 +64,7 @@ def cregister(request):
     #         'register.html',
     #         {'user_form': user_form, 'profile_form': profile_form, 'registered': registered},
     #         context)
-	return render(request, 'cibusapp1/cregister.html', {'user_form': user_form, 'registered': registered})
+	return render(request, 'cibusapp1/cregister.html', {'cart_form': user_form, 'registered': registered})
 
 
 def rregister(request):
@@ -356,10 +356,48 @@ def myorder(request):
 def orderinfo(request,orderid):
     context = RequestContext(request)
     #result = Order.objects.raw('select * from Order where customer__username = %s order by status',username)
-    result = OrderDetails.objects.filter(order__orderid = orderid)#.order_by('qty')
+    result = OrderDetails.objects.filter(order__orderid = orderid).order_by('qty')
     total = 0
     for r in result:
         total += r.qty*r.dish.price
-    
-    print type(result)
     return render(request, 'cibusapp1/orderdetail.html',{'result':result,'total':total})
+
+
+@login_required(login_url='/cibusapp1/clogin/')
+def cart(request):
+    context = RequestContext(request)
+    cart_form = cartForm()
+    if request.method == 'POST':
+        username = request.user.username
+        cartData = Cart.objects.filter(customer__username = username)
+        order = Order()
+        orderdetail = OrderDetails()
+        c = 0 
+        r = 0
+        maxId = -1
+        for i in cartData:
+            c = i.customer
+            r = i.dish.restaurant
+        OrderIter = Order.objects.all()
+        for i in OrderIter:
+            maxId = max(maxId,i.orderid)
+        order.orderid = maxId+1
+        order.customer = c
+        order.restaurant = r
+        order.save()
+        for i in cartData:
+            orderdetail = OrderDetails()
+            orderdetail.dish = i.dish
+            orderdetail.qty = i.qty
+            orderdetail.order = order
+            orderdetail.save()
+        Cart.objects.filter(customer__username = username).delete()
+        return render(request,'cibusapp1/customer.html')
+    else:
+        username = request.user.username
+        result = Cart.objects.filter(customer__username = username).order_by('qty')
+        total = 0
+        for r in result:
+            total += r.qty*r.dish.price
+
+        return render(request, 'cibusapp1/cart.html',{'cart_form':cartForm,'result':result,'total':total})

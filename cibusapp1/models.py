@@ -51,7 +51,7 @@ class Order(models.Model):
 	)
     status= models.CharField(max_length=1,
 								 choices=type_choices,
-								 default='C')
+								 default='P')
    
     customer = models.ForeignKey(CustomUser, related_name='c')
     restaurant = models.ForeignKey(CustomUser, related_name='r')
@@ -64,6 +64,10 @@ class OrderDetails(models.Model):
 	order=models.ForeignKey(Order)
 	dish=models.ForeignKey(Menu)
 	qty=models.IntegerField()
+	def __str__(self):
+		return str(self.order.orderid)+str("_")+str(self.dish.restaurant.username)+str("_")+str(self.dish.name)
+
+
 
 class Cart(models.Model):
 	customer=models.ForeignKey(CustomUser)
