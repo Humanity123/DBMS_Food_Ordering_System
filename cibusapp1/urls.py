@@ -15,4 +15,6 @@ urlpatterns = [
     url(r'^rlogin/$', views.rlogin, name='rlogin'),
     url(r'^restaurant/$', views.restaurant, name='restaurant'),
     url(r'^customer/$', views.customer, name='customer'),
+    url(r'^restaurant/add$', views.add_dish, name='add_dish'),
+    url(r'^customer/catselect$', views.catselect, name='catselect'),
 ]

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .forms import CustomerForm, RestForm
+from .forms import CustomerForm, RestForm, MenuForm, OrderForm
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login
@@ -217,3 +217,42 @@ def customer(request):
 	context = RequestContext(request)
 	return render(request, 'cibusapp1/customer.html', {})
 
+
+@login_required(login_url='/cibusapp1/rlogin/')
+def add_dish(request):
+    if request.user.user_type == 'C':
+        return HttpResponse("Ma chuda bc")
+    
+    context = RequestContext(request)
+
+    if request.method == 'POST':
+        user_form = MenuForm(data=request.POST)
+
+        if user_form.is_valid():
+            data = user_form.cleaned_data
+            m = Menu()
+            r = CustomUser.objects.get(username = request.user.username)
+            m.name = data['name']
+            m.price = data['price']
+            m.category = data['category']
+            m.restaurant = r
+            m.save()
+            return sucess(context)
+
+        else:
+            return HttpResponse("Error in signup.")
+            print user_form.errors, profile_form.errors
+
+    else:
+        user_form = MenuForm()
+        
+    return render(request, 'cibusapp1/add_dish.html', {'user_form': user_form})
+
+
+def catselect(request):
+    context = RequestContext(request)
+    if request.method == 'POST':
+        return render(request, 'cibusapp1/catselect.html',{}) 
+    else:
+        order_form = OrderForm()
+        return render(request, 'cibusapp1/catselect.html',{'order_form': order_form}) 

@@ -18,29 +18,23 @@ class CustomUser(AbstractUser):
 								 choices=type_choices,
 								 default='C')
 
-class Dish(models.Model):
+
+class Menu(models.Model):
     name = models.CharField(max_length=200)
+    restaurant = models.ForeignKey(CustomUser)
+    price = models.IntegerField(default=0)
+
     type_choices = (
-		
 		('NI', 'North Indian'),
 		('SI', 'South Indian'),
 		('FF', 'Fast Food'),
 		('C', 'Continental'),
 		('B', 'Beverage'),
 		('D', 'Desset'),
-		
 	)
     category = models.CharField(max_length=2,
 								 choices=type_choices,
 								 default='C')
-   
-    def __str__(self):
-        return self.name
-
-class Menu(models.Model):
-    name = models.CharField(max_length=200)
-    restaurant = models.ForeignKey(CustomUser)
-    price = models.IntegerField(default=0)
     
    
     def __str__(self):
@@ -59,8 +53,8 @@ class Order(models.Model):
 								 choices=type_choices,
 								 default='C')
    
-    customer = models.ForeignKey(CustomUser,related_name='c')
-    restaurant = models.ForeignKey(CustomUser,related_name='r')
+    customer = models.ForeignKey(CustomUser, related_name='c')
+    restaurant = models.ForeignKey(CustomUser, related_name='r')
     
    
     def __str__(self):
@@ -68,7 +62,7 @@ class Order(models.Model):
 
 class OrderDetails(models.Model):
 	order=models.ForeignKey(Order)
-	dish=models.ForeignKey(Dish)
+	dish=models.ForeignKey(Menu)
 	qty=models.IntegerField()
 
 # Create your models here.
