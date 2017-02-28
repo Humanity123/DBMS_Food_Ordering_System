@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .forms import CustomerForm, RestForm, MenuForm, OrderForm
+from .forms import CustomerForm, RestForm, MenuForm, OrderForm, ROrderDetailsForm
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
+from .models import Menu, CustomUser, Order, OrderDetails
 
 
 # Create your views here.
@@ -16,18 +17,13 @@ def index(request):
     return render(request, 'cibusapp1/index.html', {})
 
 
-# def cregister(request):
-# 	context = RequestContext(request)
-# 	user_form = CustomerForm()
-# 	registered = False
-# 	return render(request, 'cibusapp1/cregister.html', {'user_form': user_form, 'registered': registered})
+
 
 def cregister(request):
     # Like before, get the request's context.
     context = RequestContext(request)
 
-    # A boolean value for telling the template whether the registration was successful.
-    # Set to False initially. Code changes value to True when registration succeeds.
+    
     registered = False
 
     # If it's a HTTP POST, we're interested in processing form data.
@@ -49,7 +45,7 @@ def cregister(request):
 
             
             registered = True
-            return sucess(context)
+            return index(request)
 
         # Invalid form or forms - mistakes or something else?
         # Print problems to the terminal.
@@ -99,7 +95,7 @@ def rregister(request):
 
             
             registered = True
-            return sucess(context)
+            return index(request)
 
         # Invalid form or forms - mistakes or something else?
         # Print problems to the terminal.
@@ -177,18 +173,13 @@ def rlogin(request):
         # combination is valid - a User object is returned if it is.
         user = authenticate(username=username, password=password)
 
-        # If we have a User object, the details are correct.
-        # If None (Python's way of representing the absence of a value), no user
-        # with matching credentials was found.
         if user:
             # Is the account active? It could have been disabled.
             if user.is_active:
-                # If the account is valid and active, we can log the user in.
-                # We'll send the user back to the homepage.
                 login(request, user)
                 return redirect(restaurant)
             else:
-                # An inactive account was used - no logging in!
+                
                 return HttpResponse("Your Rango account is disabled.")
         else:
             # Bad login details were provided. So we can't log the user in.
@@ -205,7 +196,7 @@ def rlogin(request):
 @login_required(login_url='/cibusapp1/rlogin/')
 def restaurant(request):
 	if request.user.user_type == 'C':
-		return HttpResponse("Ma chuda bc")
+		return HttpResponse("You are not authorised to view this page")
 	context = RequestContext(request)
 	return render(request, 'cibusapp1/restaurant.html', {})
 
@@ -213,15 +204,16 @@ def restaurant(request):
 @login_required(login_url='/cibusapp1/clogin/')
 def customer(request):
 	if request.user.user_type == 'R':
-		return HttpResponse("Ma chuda bc")
+		return HttpResponse("You are not authorised to view this page")
 	context = RequestContext(request)
 	return render(request, 'cibusapp1/customer.html', {})
+
 
 
 @login_required(login_url='/cibusapp1/rlogin/')
 def add_dish(request):
     if request.user.user_type == 'C':
-        return HttpResponse("Ma chuda bc")
+        return HttpResponse("You are not authorised to view this page")
     
     context = RequestContext(request)
 
@@ -237,7 +229,7 @@ def add_dish(request):
             m.category = data['category']
             m.restaurant = r
             m.save()
-            return sucess(context)
+            return restaurant(request)
 
         else:
             return HttpResponse("Error in signup.")
@@ -252,7 +244,94 @@ def add_dish(request):
 def catselect(request):
     context = RequestContext(request)
     if request.method == 'POST':
-        return render(request, 'cibusapp1/catselect.html',{}) 
+        order_form = OrderForm(data=request.POST)
+        if order_form.is_valid():
+            
+            data = order_form.cleaned_data
+            c=data['category']
+            # print c 
+            return searchres(request, c)
     else:
         order_form = OrderForm()
         return render(request, 'cibusapp1/catselect.html',{'order_form': order_form}) 
+
+
+def searchres(request,c):
+    print c
+    query_result= Menu.objects.filter(category=c)
+    x=[(y.restaurant.first_name,y.restaurant.username) for y in query_result]
+    seen = set()
+    z=[item for item in x if item[1] not in seen and not seen.add(item[1])]
+    
+    for s in z:
+        print s[0]
+    # print query_result
+    return render(request, 'cibusapp1/searchres.html', {'query_result': z,'category':c})
+
+
+def restdish(request,username,category):
+    
+    return HttpResponse("rest hai %s " %category)
+
+
+# NOTE: COPIED IN RORDERS_INFO
+@login_required(login_url='/cibusapp1/rlogin/')
+def rorders(request):
+    if request.user.user_type == 'C':
+        return HttpResponse("Ma chuda bc")
+
+    result = Order.objects.filter(restaurant__username = request.user.username)
+
+    return render(request, 'cibusapp1/rorders.html', {'result': result})
+
+
+@login_required(login_url='/cibusapp1/rlogin/')
+def rorders_info(request, orderid):
+    if request.user.user_type == 'C':
+        return HttpResponse("Ma chuda bc")
+    
+    if request.method == 'POST':
+        rorder_details_form = ROrderDetailsForm(data=request.POST)
+
+        if rorder_details_form.is_valid():
+            data = rorder_details_form.cleaned_data
+            Order.objects.filter(orderid = orderid).update(status = data['status'])    
+            result = Order.objects.filter(restaurant__username = request.user.username)
+            return render(request, 'cibusapp1/rorders.html', {'result': result})
+        else:
+            print rorder_details_form.errors
+            return HttpResponse("Unknown Error")
+
+    else:
+        x = Order.objects.filter(orderid = orderid).first()
+        rorder_details_form = ROrderDetailsForm()
+        rorder_details_form.fields["first_name"].initial = x.customer.first_name
+        rorder_details_form.fields["last_name"].initial = x.customer.last_name
+        rorder_details_form.fields["address"].initial = x.customer.address
+        rorder_details_form.fields["contact"].initial = x.customer.contact
+        rorder_details_form.fields["status"].initial = x.status
+        result = OrderDetails.objects.filter(order__orderid = orderid)
+
+        rorder_details_form.fields["amount"].initial = sum([x.dish.price * x.qty for x in result])
+        
+    return render(request, 'cibusapp1/rordersdetails.html', {'rorder_details_form': rorder_details_form, 'result': result})
+
+@login_required(login_url='/cibusapp1/clogin/')
+def myorder(request):
+    context = RequestContext(request)
+    username = request.user.username
+    #result = Order.objects.raw('select * from Order where customer__username = %s order by status',username)
+    result = Order.objects.filter(customer__username = username).order_by('status')
+    return render(request, 'cibusapp1/order.html',{'result':result})
+
+@login_required(login_url='/cibusapp1/clogin/')
+def orderinfo(request,orderid):
+    context = RequestContext(request)
+    #result = Order.objects.raw('select * from Order where customer__username = %s order by status',username)
+    result = OrderDetails.objects.filter(order__orderid = orderid)#.order_by('qty')
+    total = 0
+    for r in result:
+        total += r.qty*r.dish.price
+    
+    print type(result)
+    return render(request, 'cibusapp1/orderdetail.html',{'result':result,'total':total})

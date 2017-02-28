@@ -17,4 +17,11 @@ urlpatterns = [
     url(r'^customer/$', views.customer, name='customer'),
     url(r'^restaurant/add$', views.add_dish, name='add_dish'),
     url(r'^customer/catselect$', views.catselect, name='catselect'),
+    url(r'^customer/restdish/(?P<username>\w{0,200})/(?P<category>\w{0,2})$', views.restdish, name='restdish'),
+    url(r'^restaurant/rorders$', views.rorders, name='rorders'),
+    url(r'^restaurant/rorders/(?P<orderid>\d+)$', views.rorders_info, name='rorders_info'),
+    url(r'^customer/myorder$', views.myorder, name='myorders'),
+    url(r'^customer/myorder/(?P<orderid>\d+)$', views.orderinfo, name='orderinfo'),
+    # url(r'^customer/catselect/searchres$', views.searchres, name='searchres'),
+
 ]

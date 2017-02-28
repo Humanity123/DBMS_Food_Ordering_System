@@ -1,0 +1,32 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+
+<!DOCTYPE html>
+<html>
+    <head>
+        
+    <h1>Cibus</h1>
+   
+  
+
+</head>
+
+<body>
+
+	<table class="table">
+    <tr>
+        <th>Name of restraunts</th>
+    </tr>
+    {% for item in query_result %}
+    <tr> 
+        <td> {% url 'restdish' item.1 category as the_url %}
+                 <a href="{{the_url}}">{{ item.0 }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<a href="">Back
+</body>

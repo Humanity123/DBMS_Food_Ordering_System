@@ -41,3 +41,18 @@ class OrderForm(forms.Form):
 		('D', 'Desset'),]
 
 	category = forms.ChoiceField(choices = type_choices, widget=forms.Select(attrs={'class':'form-control'}), required=True)
+
+class ROrderDetailsForm(forms.Form):
+	first_name = forms.CharField(label = 'first_name', max_length = 20, required = False, widget=forms.TextInput(attrs={'class' : 'form-control'}), disabled = True)
+	last_name = forms.CharField(label = 'last_name', max_length = 20, required = False, widget=forms.TextInput(attrs={'class' : 'form-control'}), disabled = True)
+	address = forms.CharField(label = 'address', max_length = 200, required = False, widget=forms.TextInput(attrs={'class' : 'form-control'}), disabled = True)
+	contact = forms.CharField(label = 'contact', max_length = 200, required = False, widget=forms.TextInput(attrs={'class' : 'form-control'}), disabled = True)
+	amount = forms.IntegerField(label = 'amount', required = False, widget=forms.TextInput(attrs={'class' : 'form-control'}), disabled = True)
+	type_choices = [
+		
+		('P', 'Under Preparation'),
+		('O', 'Dispatched'),
+		('D', 'Delivered'),
+		
+	]
+	status = forms.ChoiceField(choices=type_choices,widget=forms.Select(attrs={'class':'form-control'}))

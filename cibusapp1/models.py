@@ -58,7 +58,7 @@ class Order(models.Model):
     
    
     def __str__(self):
-        return self.orderid
+        return str(self.orderid)
 
 class OrderDetails(models.Model):
 	order=models.ForeignKey(Order)
