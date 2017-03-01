@@ -21,19 +21,15 @@
     background-position: top;
     background-attachment: fixed;
 }
-/*.jumbotron{
-    position: relative;
-    padding:0 !important;
-    margin-top:70px !important;
-    background: #eee;
-    margin-top: 43px;
-    text-align:center;
-    margin-bottom: 0 !important;
-    text-shadow: black 0.3em 0.3em 0.3em;
-}*/
+.center {
+    margin: auto;
+    width: 60%;
+    
+    padding: 10px;
+}
 .jumbotron h1{
  color: red;
- font-family: "Brush Script MT", cursive;
+ font-family: "Lobster" !important;
  font-size: 48px;
   font-style: normal;
   font-variant: normal;
@@ -42,22 +38,55 @@
 
 }
 .other-color{
-    background: #ffd700
+    background: #FFDB6B
   }
 h1 {
   font-style: arial;
   color: white;
 }
 .well{
-background-color: #ffd700
+background-color: #ffd700;
+padding: 0;
+}
+p{
+  font-size: 1em;
 }
 
+#menu > li{
+  float:right;
+  padding-top: 20px;
+  padding-right: 20px;
+  padding-left: 20px; 
+}
+
+#menu {
+  padding-right: 50px;
+}
+
+#topbar{
+  padding: 0;
+}
 </style>
 <!DOCTYPE html>
 <html>
     <head>
         <!-- Is anyone getting tired of repeatedly entering the header over and over?? -->
        
+ <div id="topbar">
+        <div class="well">
+          <div class="row">
+          <ul id="menu">
+              <!-- <li style="font-color:#ffd700;">Someshittytextforplaceholder</li> -->
+              <li><a href="/cibusapp1/clogin/"><p>Customer Login</p></a></li>
+              <li><a href="/cibusapp1/cregister/"><p>Customer Register</p></a></li>
+              <li> <a href="/cibusapp1/rlogin/"><p>Restaurant Login</p></a></li>
+              <li><a href="/cibusapp1/rregister/"><p>Restaurant Register</p></a></li>
+          </ul>
+          </div>
+         </div>
+         </div>
+
+
    <div class="jumbotron other-color" container-fluid>
    <div class="container" style="height: 60px;" >
      <h1 >Cibus</h1>
@@ -76,16 +105,7 @@ background-color: #ffd700
 
     <body <body id="bg" style="background-image: url('{% static "food.jpg"%}')";> >
       
-        
-        <div class="well">
-          <div class="row">
-              <div class="col-md-6"><a href="/cibusapp1/clogin/">Customer Login</a></div>
-              <div class="col-md-6"><a href="/cibusapp1/cregister/">Customer Register</a></div>
-              <div class="col-md-6"> <a href="/cibusapp1/rlogin/">Restaurant Login</a></div>
-              <div class="col-md-6"><a href="/cibusapp1/rregister/">Restaurant Register</a></div>
-          </div>
-         </div>
-
+       
         
         
         

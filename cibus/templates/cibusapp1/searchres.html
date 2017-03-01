@@ -5,14 +5,99 @@
 <link rel="stylesheet" href="{% static 'css/register.css' %}">
 
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
     <head>
-        
-    <h1>Cibus</h1>
-   
-  
+  <title>Cibus</title>
+      <style type="text/css">
+      
+          body {
+              margin:0;
+              padding:0;
+              font-family: Sans-Serif;
+              line-height: 1.5em;
 
-</head>
+          }
+          
+          #header {
+              background: #FFDB6B;
+              height: 100px;
+          }
+          
+          #header h1 {
+              margin: 0;
+              padding-top: 15px;
+          }
+          
+          main {
+              padding-bottom: 10010px;
+              margin-bottom: -10000px;
+              float: left;
+              width: 100%;
+          }
+          
+          #nav {
+              padding-bottom: 10010px;
+              margin-bottom: -10000px;
+              float: left;
+              width: 230px;
+              margin-left: -100%;
+              background: #eee;
+          }
+          
+          #footer {
+              clear: left;
+              width: 100%;
+              background: #FFDB6B;
+              text-align: center;
+              padding: 4px 0;
+              position: fixed;
+              bottom: 0;
+              height: 40px;
+          }
+  
+          #wrapper {
+              overflow: hidden;
+          }
+                      
+          #content {
+              margin-left: 230px; /* Same as 'nav' width */
+          }
+          
+          .innertube {
+              margin: 15px; /* Padding for content */
+              margin-top: 0;
+              height: 100vh;
+          }
+      
+          p {
+              color: #555;
+          }
+  
+          nav ul {
+              list-style-type: none;
+              margin: 0;
+              padding: 0;
+          }
+          
+          nav ul a {
+              color: darkgreen;
+              text-decoration: none;
+          }
+      
+      </style>
+      
+  
+  
+  </head>
+  <header id="header">
+      <div class="innertube">
+          {% url 'customer' as t_url %}
+           <a href="{{t_url}}"><h1>Cibus</h1></a>
+          <p align="right">{% url 'logout' as t_url %}
+  <a href="{{t_url}}" > Logout </a></p>
+      </div>
+  </header>
 
 <body>
 
@@ -28,5 +113,5 @@
     {% endfor %}
 </table>
 
-<a href="">Back
+
 </body>

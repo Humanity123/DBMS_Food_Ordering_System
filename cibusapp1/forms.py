@@ -60,10 +60,21 @@ class CDishForm(forms.Form):
 
 class cartForm(forms.Form):
 	temp = 'temp'
-<<<<<<< HEAD
 
 class EmptyForm(forms.Form):
 	a = 2
 
-=======
->>>>>>> 0d54d2aa73f62f7e47a019180b1383d21757328e
+
+class CeditForm(forms.ModelForm):
+    password = forms.CharField(min_length = 1, widget=forms.PasswordInput())
+    username = forms.CharField(disabled=True)
+    class Meta:
+        model = CustomUser
+        fields = ('username','email', 'password' ,'first_name','last_name', 'contact','address')
+class ReditForm(forms.ModelForm):
+    password = forms.CharField(min_length = 1,widget=forms.PasswordInput())
+    first_name = forms.CharField(label = 'Name of restaurant', max_length = 20, required = True, widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    username = forms.CharField(disabled=True)
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'email', 'password', 'first_name', 'contact', 'address')

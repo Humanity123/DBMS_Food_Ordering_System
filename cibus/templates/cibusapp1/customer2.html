@@ -45,6 +45,9 @@
 				background: #ccc;
 				text-align: center;
 				padding: 4px 0;
+				position: fixed;
+  				bottom: 0;
+  				height: 40px;
 			}
 	
 			#wrapper {
@@ -58,6 +61,7 @@
 			.innertube {
 				margin: 15px; /* Padding for content */
 				margin-top: 0;
+				height: 100vh;
 			}
 		
 			p {
@@ -86,6 +90,8 @@
 		<header id="header">
 			<div class="innertube">
 				<h1>Cibus</h1>
+				<p>{% url 'logout' as t_url %}
+        <a href="{{t_url}}" class="btn btn-default"> Logout </a></p>
 			</div>
 		</header>
 		
@@ -104,9 +110,9 @@
 				<div class="innertube">
 					<h3>Left heading</h3>
 					<ul>
-						<li><a href="#">Link 1</a></li>
-						<li><a href="#">Link 2</a></li>
-						<li><a href="#">Link 3</a></li>
+						<li> <a href="/cibusapp1/customer/catselect">New Order</a></li>
+						<li><a href="/cibusapp1/customer/myorder">My Orders</a></li>
+						<a href="/cibusapp1/customer/cart">My Cart</a>
 						<li><a href="#">Link 4</a></li>
 						<li><a href="#">Link 5</a></li>
 					</ul>

@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^clogin/$', views.clogin, name='clogin'),
     url(r'^rlogin/$', views.rlogin, name='rlogin'),
     url(r'^restaurant/$', views.restaurant, name='restaurant'),
+    url(r'^restaurant/edit/', views.redit, name='redit'),
     url(r'^customer/$', views.customer, name='customer'),
     url(r'^restaurant/add$', views.add_dish, name='add_dish'),
     url(r'^customer/catselect$', views.catselect, name='catselect'),
@@ -25,6 +26,9 @@ urlpatterns = [
     url(r'^restaurant/rorders/(?P<orderid>\d+)$', views.rorders_info, name='rorders_info'),
     url(r'^customer/myorder$', views.myorder, name='myorders'),
     url(r'^customer/myorder/(?P<orderid>\d+)$', views.orderinfo, name='orderinfo'),
+    url(r'^customer/edit/', views.cedit, name='cedit'),
+    url(r'^customer/cart/inc/(?P<dishname>\w{1,200})', views.cartinc, name='inc'),
+    url(r'^customer/cart/dec/(?P<dishname>\w{1,200})', views.cartdec, name='dec'),
     url(r'^customer/cart/', views.cart, name='cart'),
     # url(r'^customer/catselect/searchres$', views.searchres, name='searchres'),
 
