@@ -1,82 +1,91 @@
 {% load staticfiles %}
+{% load static %}
 
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="{% static 'css/register.css' %}">
+<style>
+  /*body {
+    background: white url("{% static "food.jpg" %}") no-repeat ;
+}*/
+/*html { 
+  background: url("{% static "food.jpg" %}") no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}*/
+#bg{
+    background-size: 1800px 900px;
+    background-repeat: no-repeat;
+    background-position: top;
+    background-attachment: fixed;
+}
+/*.jumbotron{
+    position: relative;
+    padding:0 !important;
+    margin-top:70px !important;
+    background: #eee;
+    margin-top: 43px;
+    text-align:center;
+    margin-bottom: 0 !important;
+    text-shadow: black 0.3em 0.3em 0.3em;
+}*/
+.jumbotron h1{
+ color: red;
+ font-family: "Brush Script MT", cursive;
+ font-size: 48px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: bold;
+  line-height: normal;
 
+}
+.other-color{
+    background: #ffd700
+  }
+h1 {
+  font-style: arial;
+  color: white;
+}
+.well{
+background-color: #ffd700
+}
+
+</style>
 <!DOCTYPE html>
 <html>
     <head>
         <!-- Is anyone getting tired of repeatedly entering the header over and over?? -->
        
-  <div class="jumbotron">
-     <h1>Cibus</h1>
+   <div class="jumbotron other-color" container-fluid>
+   <div class="container" style="height: 60px;" >
+     <h1 >Cibus</h1>
+     </div>
    
   </div>
 
-</div>
+
          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
    <link rel="shortcut icon" type="image/png" href="images/favicon.png"/>
-   <!-- <style type="text/css">
-    body {
-        background-color: #EEE;
-    }
-    .text-primary {
-      font-family: Roboto,Helvetica,Arial,sans-serif;
-        font-weight: 300;
-        color: #009688;
-    }
-    .panel {
-        border-radius: 2px;
-        border: 0;
-        -webkit-box-shadow: 0 1px 6px 0 rgba(0,0,0,.12),0 1px 6px 0 rgba(0,0,0,.12);
-        box-shadow: 0 1px 6px 0 rgba(0,0,0,.12),0 1px 6px 0 rgba(0,0,0,.12);
-        margin-bottom: 20px;
-        background-color: #fff;
-        font-size: 14px;
-    }
-    h3 {
-        font-size: 48px;
-    }
-    .panel-default>.panel-heading {
-        color: #333;
-        background-color: #f5f5f5;
-        border-color: #ddd;
-    }
-    .panel-heading {
-        padding: 10px 15px;
-        border-bottom: 1px solid transparent;
-        border-top-left-radius: 3px;
-        border-top-right-radius: 3px;
-    }
-    * {
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-    }
-    .label{
-      font-size: 16px;
-        font-weight: 500;
-    }
-    progress{display:inline-block;vertical-align:baseline}
-    @-webkit-keyframes progress-bar-stripes{from{background-position:40px 0}to{background-position:0 0}}@-o-keyframes progress-bar-stripes{from{background-position:40px 0}to{background-position:0 0}}@keyframes progress-bar-stripes{from{background-position:40px 0}to{background-position:0 0}}.progress{height:20px;margin-bottom:20px;overflow:hidden;background-color:#f5f5f5;border-radius:4px;-webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,.1);box-shadow:inset 0 1px 2px rgba(0,0,0,.1)}.progress-bar{float:left;width:0;height:100%;font-size:12px;line-height:20px;color:#fff;text-align:center;background-color:#337ab7;-webkit-box-shadow:inset 0 -1px 0 rgba(0,0,0,.15);box-shadow:inset 0 -1px 0 rgba(0,0,0,.15);-webkit-transition:width .6s ease;-o-transition:width .6s ease;transition:width .6s ease}.progress-bar-striped,.progress-striped .progress-bar{background-image:-webkit-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);background-image:-o-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);background-image:linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);-webkit-background-size:40px 40px;background-size:40px 40px}.progress-bar.active,.progress.active .progress-bar{-webkit-animation:progress-bar-stripes 2s linear infinite;-o-animation:progress-bar-stripes 2s linear infinite;animation:progress-bar-stripes 2s linear infinite}.progress-bar-success{background-color:#5cb85c}.progress-striped .progress-bar-success{background-image:-webkit-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);background-image:-o-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);background-image:linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent)}.progress-bar-info{background-color:#5bc0de}.progress-striped .progress-bar-info{background-image:-webkit-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);background-image:-o-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);background-image:linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent)}.progress-bar-warning{background-color:#f0ad4e}.progress-striped .progress-bar-warning{background-image:-webkit-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);background-image:-o-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);background-image:linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent)}.progress-bar-danger{background-color:#d9534f}.progress-striped .progress-bar-danger{background-image:-webkit-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);background-image:-o-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);background-image:linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent)}
-  </style> -->
-
+  
     </head>
 
-    <body>
+    <body <body id="bg" style="background-image: url('{% static "food.jpg"%}')";> >
+      
         
-        <div class="container">
-  <div class="row">
-    <div class="col-md-6"><a href="/cibusapp1/clogin/">Customer Login</a></div>
-    <div class="col-md-6"><a href="/cibusapp1/cregister/">Customer Register</a></div>
-    <div class="col-md-6"> <a href="/cibusapp1/rlogin/">Restaurant Login</a></div>
-    <div class="col-md-6"><a href="/cibusapp1/rregister/">Restaurant Register</a></div>
-  </div>
-</div>
+        <div class="well">
+          <div class="row">
+              <div class="col-md-6"><a href="/cibusapp1/clogin/">Customer Login</a></div>
+              <div class="col-md-6"><a href="/cibusapp1/cregister/">Customer Register</a></div>
+              <div class="col-md-6"> <a href="/cibusapp1/rlogin/">Restaurant Login</a></div>
+              <div class="col-md-6"><a href="/cibusapp1/rregister/">Restaurant Register</a></div>
+          </div>
+         </div>
+
         
         
         

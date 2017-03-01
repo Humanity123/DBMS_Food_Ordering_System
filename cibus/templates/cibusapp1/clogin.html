@@ -1,22 +1,69 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+<style >
+.center {
+    margin: auto;
+    width: 60%;
+    
+    padding: 10px;
+}
+
+.jumbotron h1{
+ 
+ font-size: 28px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: bold;
+  line-height: normal;
+
+}
+body {
+    background: #ffd700
+}
+
+.other-color{
+    background: #eee
+  }
+
+</style>
+
+
 <!DOCTYPE html>
 <html>
+
     <head>
         <!-- Is anyone getting tired of repeatedly entering the header over and over?? -->
         <title>Rango</title>
     </head>
 
     <body>
-        <h1>Login to Rango</h1>
+    <div class="jumbotron">
+    <div class="container" style="height: 30px;" >
+        <h1>Login to Cibus</h1>
+    </div>
+    </div>
+        <div class="center">
 
-        <form id="login_form" method="post" action="/cibusapp1/clogin/">
-            {% csrf_token %}
-            Username: <input type="text" name="username" value="" size="50" />
-            <br />
-            Password: <input type="password" name="password" value="" size="50" />
-            <br />
+        
+        <div class="well other-color">
+            <form id="login_form" method="post" action="/cibusapp1/clogin/">
+                {% csrf_token %}
+                Username: <input type="text" name="username" class="form-control" value="" size="50" />
+                <br />
+                Password: <input type="password" name="password" class="form-control" value="" size="50" />
+                <br />
+                
+                <input type="submit" value="Login" class="btn btn-primary pull-right"  />
 
-            <input type="submit" value="submit" />
-        </form>
-
+            </form>
+            <div style="padding-top: 20px;"></div>
+        </div>
+        </div>
+    {% for message in messages %}
+    <div class="alert alert-danger alert-{{ message.tags }}">{{ message }}</div>
+{% endfor %}
     </body>
 </html>

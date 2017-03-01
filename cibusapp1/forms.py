@@ -4,13 +4,13 @@ from django import forms
 
 class CustomerForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
-
     class Meta:
         model = CustomUser
         fields = ('username', 'email', 'password' ,'first_name','last_name', 'contact','address')
 
 class RestForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
+    first_name = forms.CharField(label = 'Name of restaurant', max_length = 20, required = True, widget=forms.TextInput(attrs={'class' : 'form-control'}))
 
     class Meta:
         model = CustomUser
@@ -40,11 +40,11 @@ class OrderForm(forms.Form):
 	category = forms.ChoiceField(choices = type_choices, widget=forms.Select(attrs={'class':'form-control'}), required=True)
 
 class ROrderDetailsForm(forms.Form):
-	first_name = forms.CharField(label = 'first_name', max_length = 20, required = False, widget=forms.TextInput(attrs={'class' : 'form-control'}), disabled = True)
-	last_name = forms.CharField(label = 'last_name', max_length = 20, required = False, widget=forms.TextInput(attrs={'class' : 'form-control'}), disabled = True)
-	address = forms.CharField(label = 'address', max_length = 200, required = False, widget=forms.TextInput(attrs={'class' : 'form-control'}), disabled = True)
-	contact = forms.CharField(label = 'contact', max_length = 200, required = False, widget=forms.TextInput(attrs={'class' : 'form-control'}), disabled = True)
-	amount = forms.IntegerField(label = 'amount', required = False, widget=forms.TextInput(attrs={'class' : 'form-control'}), disabled = True)
+	first_name = forms.CharField(label = 'First Name', max_length = 20, required = False, widget=forms.TextInput(attrs={'class' : 'form-control'}), disabled = True)
+	last_name = forms.CharField(label = 'Last Name', max_length = 20, required = False, widget=forms.TextInput(attrs={'class' : 'form-control'}), disabled = True)
+	address = forms.CharField(label = 'Address', max_length = 200, required = False, widget=forms.TextInput(attrs={'class' : 'form-control'}), disabled = True)
+	contact = forms.CharField(label = 'Contact', max_length = 200, required = False, widget=forms.TextInput(attrs={'class' : 'form-control'}), disabled = True)
+	amount = forms.IntegerField(label = 'Bill Amount', required = False, widget=forms.TextInput(attrs={'class' : 'form-control'}), disabled = True)
 	type_choices = [
 		
 		('P', 'Under Preparation'),
@@ -56,4 +56,11 @@ class ROrderDetailsForm(forms.Form):
 
 class CDishForm(forms.Form):
 	qty = forms.IntegerField(min_value = 0, label = 'Quantity', widget=forms.TextInput(attrs={'class' : 'form-control'}))
+
+
+class cartForm(forms.Form):
+	temp = 'temp'
+
+class EmptyForm(forms.Form):
+	a = 2
 

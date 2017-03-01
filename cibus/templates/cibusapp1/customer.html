@@ -11,6 +11,9 @@
         
         <a href="/cibusapp1/customer/catselect">New Order</a>
         <a href="/cibusapp1/customer/myorder">My Orders</a>
+        <a href="/cibusapp1/customer/cart">My Cart</a>
+        {% url 'logout' as t_url %}
+        <a href="{{t_url}}" class="btn btn-default"> Logout </a>
         
 
     </body>
