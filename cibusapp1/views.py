@@ -1,6 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+<<<<<<< HEAD
 from .forms import CustomerForm, RestForm, MenuForm, OrderForm, ROrderDetailsForm, CDishForm, cartForm, EmptyForm
+=======
+from .forms import CustomerForm, RestForm, MenuForm, OrderForm, ROrderDetailsForm, CDishForm, cartForm
+>>>>>>> 0d54d2aa73f62f7e47a019180b1383d21757328e
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login, logout
@@ -27,6 +31,7 @@ def user_logout(request):
 
 
 def cregister(request):
+<<<<<<< HEAD
 	# Like before, get the request's context.
 	context = RequestContext(request)
 
@@ -72,6 +77,53 @@ def cregister(request):
 	#         {'user_form': user_form, 'profile_form': profile_form, 'registered': registered},
 	#         context)
 	return render(request, 'cibusapp1/cregister.html', {'user_form': user_form, 'registered': registered})
+=======
+    # Like before, get the request's context.
+    context = RequestContext(request)
+
+    
+    registered = False
+
+    # If it's a HTTP POST, we're interested in processing form data.
+    if request.method == 'POST':
+        # Attempt to grab information from the raw form information.
+        # Note that we make use of both UserForm and UserProfileForm.
+        user_form = CustomerForm(data=request.POST)
+        
+
+        # If the two forms are valid...
+        if user_form.is_valid():
+            # Save the user's form data to the database.
+            user = user_form.save()
+
+            # Now we hash the password with the set_password method.
+            # Once hashed, we can update the user object.
+            user.set_password(user.password)
+            user.save()
+
+            
+            registered = True
+            return index(request)
+
+        # Invalid form or forms - mistakes or something else?
+        # Print problems to the terminal.
+        # They'll also be shown to the user.
+        else:
+            return HttpResponse("Error in signup.")
+            print user_form.errors, profile_form.errors
+
+    # Not a HTTP POST, so we render our form using two ModelForm instances.
+    # These forms will be blank, ready for user input.
+    else:
+        user_form = CustomerForm()
+        
+    # Render the template depending on the context.
+    # return render_to_response(
+    #         'register.html',
+    #         {'user_form': user_form, 'profile_form': profile_form, 'registered': registered},
+    #         context)
+	return render(request, 'cibusapp1/cregister.html', {'cart_form': user_form, 'registered': registered})
+>>>>>>> 0d54d2aa73f62f7e47a019180b1383d21757328e
 
 
 def rregister(request):
@@ -369,6 +421,7 @@ def myorder(request):
 
 @login_required(login_url='/cibusapp1/clogin/')
 def orderinfo(request,orderid):
+<<<<<<< HEAD
 	context = RequestContext(request)
 	#result = Order.objects.raw('select * from Order where customer__username = %s order by status',username)
 	result = OrderDetails.objects.filter(order__orderid = orderid).order_by('qty')
@@ -376,10 +429,20 @@ def orderinfo(request,orderid):
 	for r in result:
 		total += r.qty*r.dish.price
 	return render(request, 'cibusapp1/orderdetail.html',{'result':result,'total':total})
+=======
+    context = RequestContext(request)
+    #result = Order.objects.raw('select * from Order where customer__username = %s order by status',username)
+    result = OrderDetails.objects.filter(order__orderid = orderid).order_by('qty')
+    total = 0
+    for r in result:
+        total += r.qty*r.dish.price
+    return render(request, 'cibusapp1/orderdetail.html',{'result':result,'total':total})
+>>>>>>> 0d54d2aa73f62f7e47a019180b1383d21757328e
 
 
 @login_required(login_url='/cibusapp1/clogin/')
 def cart(request):
+<<<<<<< HEAD
 	context = RequestContext(request)
 	cart_form = cartForm()
 	if request.method == 'POST':
@@ -420,3 +483,41 @@ def cart(request):
 			total += r.qty*r.dish.price
 
 		return render(request, 'cibusapp1/cart.html',{'cart_form':cartForm,'result':result,'total':total})
+=======
+    context = RequestContext(request)
+    cart_form = cartForm()
+    if request.method == 'POST':
+        username = request.user.username
+        cartData = Cart.objects.filter(customer__username = username)
+        order = Order()
+        orderdetail = OrderDetails()
+        c = 0 
+        r = 0
+        maxId = -1
+        for i in cartData:
+            c = i.customer
+            r = i.dish.restaurant
+        OrderIter = Order.objects.all()
+        for i in OrderIter:
+            maxId = max(maxId,i.orderid)
+        order.orderid = maxId+1
+        order.customer = c
+        order.restaurant = r
+        order.save()
+        for i in cartData:
+            orderdetail = OrderDetails()
+            orderdetail.dish = i.dish
+            orderdetail.qty = i.qty
+            orderdetail.order = order
+            orderdetail.save()
+        Cart.objects.filter(customer__username = username).delete()
+        return render(request,'cibusapp1/customer.html')
+    else:
+        username = request.user.username
+        result = Cart.objects.filter(customer__username = username).order_by('qty')
+        total = 0
+        for r in result:
+            total += r.qty*r.dish.price
+
+        return render(request, 'cibusapp1/cart.html',{'cart_form':cartForm,'result':result,'total':total})
+>>>>>>> 0d54d2aa73f62f7e47a019180b1383d21757328e
