@@ -90,9 +90,9 @@
   
   
   </head>
-  <header id="header">
+ <header id="header">
       <div class="innertube">
-          {% url 'restaurant' as t_url %}
+          {% url 'customer' as t_url %}
            <a href="{{t_url}}"><h1>Cibus</h1></a>
           <p align="right">{% url 'logout' as t_url %}
   <a href="{{t_url}}" > Logout </a></p>
@@ -100,29 +100,25 @@
   </header>
 
 
-    <body>
-        <h1><a href="">Restaurant add dish  </a></h1>
+<body>
 
+	<table class="table">
+    <tr>
+        <th>Name of restaurants</th>
+        <th>Address</th>
+        <th>Contact</th>
+    </tr>
+    {% for item in result %}
+    <tr> 
+        <td> {% url 'restalldish' item.1 as the_url %}
+                 <a href="{{the_url}}">{{ item.0}}</td>
+        <td>{{item.2}}</td>
+        <td>{{item.3}}</td>
+    </tr>
 
-        
-        <div class="post">
-        <form id="user_form" method="post" action="/cibusapp1/restaurant/add"
-                enctype="multipart/form-data">
+    
+    {% endfor %}
+</table>
 
-            {% csrf_token %}
-
-            <!-- Display each form. The as_p method wraps each element in a paragraph
-                 (<p>) element. This ensures each element appears on a new line,
-                 making everything look neater. -->
-            {{ user_form.as_p}}
-            
-
-            <!-- Provide a button to click to submit the form. -->
-            <input type="submit" name="submit" value="Add Dish" />
-        </form>
-        </div>
-         {% for message in messages %}
-            <div class="alert alert-danger alert-{{ message.tags }}">{{ message }}</div>
-          {%endfor%}
-    </body>
-</html>
+<a href="">Back
+</body>

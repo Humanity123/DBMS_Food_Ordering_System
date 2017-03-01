@@ -103,13 +103,18 @@
 
 	<table class="table">
     <tr>
-        <th>Name of restraunts</th>
+        <th>Name of restaurants</th>
+        <th>Address</th>
+        <th>Contact</th>
     </tr>
     {% for item in query_result %}
     <tr> 
         <td> {% url 'restdish' item.1 category as the_url %}
-                 <a href="{{the_url}}">{{ item.0 }}</td>
+                 <a href="{{the_url}}">{{ item.0}}</td>
+        <td>{{item.2}}</td>
+        <td>{{item.3}}</td>
     </tr>
+    
     {% endfor %}
 </table>
 

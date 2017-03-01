@@ -8,6 +8,7 @@
 <!-- Template by quackit.com -->
 <html>
     <head>
+        
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title>Cibus</title>
         <style type="text/css">
@@ -19,9 +20,7 @@
                 line-height: 1.5em;
 
             }
-            p{
-                text-align: right;
-            }
+            
             #header {
                 background: #FFDB6B;
                 height: 100px;
@@ -70,7 +69,7 @@
             .innertube {
                 margin: 15px; /* Padding for content */
                 margin-top: 0;
-                height: 100vh;
+                height: 72vh;
             }
         
             p {
@@ -97,38 +96,33 @@
     <body>      
 
         <header id="header">
-            <div class="innertube">
-               {% url 'customer' as t_url %}
+      <div class="innertube">
+          {% url 'restaurant' as t_url %}
            <a href="{{t_url}}"><h1>Cibus</h1></a>
-                <p>{% url 'logout' as t_url %}
-        <a href="{{t_url}}"> Logout </a></p>
-            </div>
-        </header>
+          <p align="right">{% url 'logout' as t_url %}
+  <a href="{{t_url}}" > Logout </a></p>
+      </div>
+  </header>
+  </head>
+
     <body>
-        <h1><a href="">My Orders</a></h1>
+        <h1><a href="">Dishes Available</a></h1>
+
         <table class="table">
             <tr>
-                <th>Order Id</th>
-                <th>Status</th>
-                <th>Restaurant</th>
+                <th>Dish Name</th>
+                <th>Price</th>
             </tr>
-            {% for r in result %}
+            {% for r in dishes %}
             <tr>
               <td>
-                {% url 'orderinfo' r.orderid as the_url %}
-                <a href="{{the_url}}"> {{ r.orderid}} </a></td>
-              {% if r.status == 'P' %}
-              <td> {{'Under Preparation'}}</td>
-              {%endif%}
-              {% if r.status == 'O' %}
-              <td> {{'Dispatched'}}</td>
-              {%endif%}
-              {% if r.status == 'D' %}
-              <td> {{'Delivered'}}</td>
-              {%endif%}
-              <td> {{ r.restaurant.username}}</td>
+                {{r.name}}
+              <td> {{ r.price}}</td>
             </tr> 
             {% endfor %}
         </table>
+       <!-- <form action="{% url 'cart' %}" method="POST">
+           <input id="submit" type="button" value="Click" />
+       </form> -->
     </body>
 </html>

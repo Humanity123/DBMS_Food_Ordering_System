@@ -90,39 +90,44 @@
   
   
   </head>
-  <header id="header">
+ 
+      <header id="header">
       <div class="innertube">
-          {% url 'restaurant' as t_url %}
+          {% url 'customer' as t_url %}
            <a href="{{t_url}}"><h1>Cibus</h1></a>
-          <p align="right">{% url 'logout' as t_url %}
-  <a href="{{t_url}}" > Logout </a></p>
+
+          <p align="right">
+          {% url 'logout' as t_url %}
+          <a href="{{t_url}}" > Logout </a>
+          <br>
+          {% url 'cart' as t_url %}
+           <a href="{{t_url}}" > Cart </a>
+          </p>
+
       </div>
+  
   </header>
 
-
     <body>
-        <h1><a href="">Restaurant add dish  </a></h1>
+        <h1><a href="">Dishes Available</a></h1>
 
-
-        
-        <div class="post">
-        <form id="user_form" method="post" action="/cibusapp1/restaurant/add"
-                enctype="multipart/form-data">
-
-            {% csrf_token %}
-
-            <!-- Display each form. The as_p method wraps each element in a paragraph
-                 (<p>) element. This ensures each element appears on a new line,
-                 making everything look neater. -->
-            {{ user_form.as_p}}
-            
-
-            <!-- Provide a button to click to submit the form. -->
-            <input type="submit" name="submit" value="Add Dish" />
-        </form>
-        </div>
-         {% for message in messages %}
-            <div class="alert alert-danger alert-{{ message.tags }}">{{ message }}</div>
-          {%endfor%}
+        <table class="table">
+            <tr>
+                <th>Dish Name</th>
+                <th>Price</th>
+            </tr>
+            {% for r in dishes %}
+            <tr>
+              <td>
+                {% url 'restalldishselect' username r.name as the_url %}
+                <a href="{{the_url}}"> {{r.name}} </a></td>
+              <td> {{ r.price}}</td>
+            </tr> 
+            {% endfor %}
+        </table>
+       <!-- <form action="{% url 'cart' %}" method="POST">
+           <input id="submit" type="button" value="Click" />
+       </form> -->
+       
     </body>
 </html>

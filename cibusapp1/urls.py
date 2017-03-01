@@ -20,7 +20,10 @@ urlpatterns = [
     url(r'^restaurant/add$', views.add_dish, name='add_dish'),
     url(r'^customer/catselect$', views.catselect, name='catselect'),
     url(r'^customer/restdish/(?P<username>\w{0,200})/(?P<category>\w{0,2})$', views.restdish, name='restdish'),
-
+    url(r'^customer/restdish/(?P<username>\w{0,200})$', views.restalldish, name='restalldish'),
+    url(r'^customer/restdish/(?P<username>\w{0,200})/(?P<name>\w{0,200})$', views.restalldishselect, name='restalldishselect'),
+    url(r'^customer/reslist/', views.reslist, name='reslist'),
+    
     url(r'^customer/restdish/(?P<username>\w{0,200})/(?P<category>\w{0,2})/(?P<name>\w{0,200})$', views.restdishselect, name='restdishselect'),
     url(r'^restaurant/rorders$', views.rorders, name='rorders'),
     url(r'^restaurant/rorders/(?P<orderid>\d+)$', views.rorders_info, name='rorders_info'),
@@ -30,6 +33,8 @@ urlpatterns = [
     url(r'^customer/cart/inc/(?P<dishname>\w{1,200})', views.cartinc, name='inc'),
     url(r'^customer/cart/dec/(?P<dishname>\w{1,200})', views.cartdec, name='dec'),
     url(r'^customer/cart/', views.cart, name='cart'),
+    url(r'^customer/searchres/(?P<c>\w{1,2})', views.searchres, name='searchres'),
+    url(r'^restaurant/restmenu$', views.restmenu, name='restmenu'),
     # url(r'^customer/catselect/searchres$', views.searchres, name='searchres'),
 
 ]

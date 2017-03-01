@@ -45,6 +45,7 @@ class ROrderDetailsForm(forms.Form):
 	address = forms.CharField(label = 'Address', max_length = 200, required = False, widget=forms.TextInput(attrs={'class' : 'form-control'}), disabled = True)
 	contact = forms.CharField(label = 'Contact', max_length = 200, required = False, widget=forms.TextInput(attrs={'class' : 'form-control'}), disabled = True)
 	amount = forms.IntegerField(label = 'Bill Amount', required = False, widget=forms.TextInput(attrs={'class' : 'form-control'}), disabled = True)
+	when = forms.DateTimeField(label = 'Date Time of Order', required = False, disabled = True)
 	type_choices = [
 		
 		('P', 'Under Preparation'),

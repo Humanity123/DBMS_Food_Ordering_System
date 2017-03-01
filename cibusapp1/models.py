@@ -41,7 +41,7 @@ class Menu(models.Model):
         return self.name
 
 class Order(models.Model):
-    orderid = models.IntegerField()
+    orderid = models.IntegerField(primary_key = True)
     type_choices = (
 		
 		('P', 'Under Preparation'),
@@ -55,7 +55,7 @@ class Order(models.Model):
    
     customer = models.ForeignKey(CustomUser, related_name='c')
     restaurant = models.ForeignKey(CustomUser, related_name='r')
-    
+    when = models.DateTimeField(null=True)
    
     def __str__(self):
         return str(self.orderid)

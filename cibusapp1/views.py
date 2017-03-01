@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Menu, CustomUser, Order, OrderDetails, Cart
 from django.contrib import messages
 from django.db import connection
+from datetime import datetime
 # Create your views here.
 
 def index(request):
@@ -237,6 +238,10 @@ def add_dish(request):
 			m.price = data['price']
 			m.category = data['category']
 			m.restaurant = r
+			if Menu.objects.filter(restaurant__username = request.user.username, name = m.name).exists():
+				messages.success(request, 'Dish already exists')
+				return render(request, 'cibusapp1/add_dish.html', {'user_form': user_form})
+				# render_to_response('cibusapp1/restaurant.html', message='Dish already exists')
 			m.save()
 			return restaurant(request)
 
@@ -249,8 +254,10 @@ def add_dish(request):
 		
 	return render(request, 'cibusapp1/add_dish.html', {'user_form': user_form})
 
-
+@login_required(login_url='/cibusapp1/clogin/')
 def catselect(request):
+	if request.user.user_type == 'R':
+		return HttpResponse("You are not authorised to view this page")
 	context = RequestContext(request)
 	if request.method == 'POST':
 		order_form = OrderForm(data=request.POST)
@@ -259,16 +266,19 @@ def catselect(request):
 			data = order_form.cleaned_data
 			c=data['category']
 			# print c 
-			return searchres(request, c)
+			# return searchres(request, c)
+			return redirect('/cibusapp1/customer/searchres/'+c)
 	else:
 		order_form = OrderForm()
 		return render(request, 'cibusapp1/catselect.html',{'order_form': order_form}) 
 
 
-
+@login_required(login_url='/cibusapp1/clogin/')
 def searchres(request,c):
+	if request.user.user_type == 'R':
+		return HttpResponse("You are not authorised to view this page")
 	cursor = connection.cursor()
-	cursor.execute('SELECT first_name,username FROM cibusapp1_CustomUser WHERE user_type==%s AND id in (SELECT restaurant_id FROM cibusapp1_Menu WHERE category==%s)',['R',c])
+	cursor.execute('SELECT first_name,username,address,contact FROM cibusapp1_CustomUser WHERE user_type==%s AND id in (SELECT restaurant_id FROM cibusapp1_Menu WHERE category==%s)',['R',c])
 	rows = cursor.fetchall()
 	for item in rows:
 		print item
@@ -279,7 +289,7 @@ def searchres(request,c):
 @login_required(login_url='/cibusapp1/clogin/')
 def restdish(request,username,category):
 	if request.user.user_type == 'R':
-		return HttpResponse("Ma chuda bc")
+		return HttpResponse("You are not authorised to view this page")
 	cat_dishes = Menu.objects.filter(restaurant__username = username, category = category)
 	non_cat_dishes = Menu.objects.filter(restaurant__username = username).exclude(category = category)
 
@@ -288,7 +298,7 @@ def restdish(request,username,category):
 @login_required(login_url='/cibusapp1/clogin/')
 def restdishselect(request,username,category,name):
 	if request.user.user_type == 'R':
-		return HttpResponse("Ma chuda bc")
+		return HttpResponse("You are not authorised to view this page")
 
 	if request.method == 'POST':
 		cdish_form = CDishForm(data=request.POST)
@@ -322,7 +332,7 @@ def restdishselect(request,username,category,name):
 @login_required(login_url='/cibusapp1/rlogin/')
 def rorders(request):
 	if request.user.user_type == 'C':
-		return HttpResponse("Ma chuda bc")
+		return HttpResponse("You are not authorised to view this page")
 
 	result = Order.objects.filter(restaurant__username = request.user.username)
 
@@ -332,7 +342,7 @@ def rorders(request):
 @login_required(login_url='/cibusapp1/rlogin/')
 def rorders_info(request, orderid):
 	if request.user.user_type == 'C':
-		return HttpResponse("Ma chuda bc")
+		return HttpResponse("You are not authorised to view this page")
 	
 	if request.method == 'POST':
 		rorder_details_form = ROrderDetailsForm(data=request.POST)
@@ -354,6 +364,7 @@ def rorders_info(request, orderid):
 		rorder_details_form.fields["address"].initial = x.customer.address
 		rorder_details_form.fields["contact"].initial = x.customer.contact
 		rorder_details_form.fields["status"].initial = x.status
+		rorder_details_form.fields["when"].initial = x.when
 		result = OrderDetails.objects.filter(order__orderid = orderid)
 
 		rorder_details_form.fields["amount"].initial = sum([x.dish.price * x.qty for x in result])
@@ -362,6 +373,8 @@ def rorders_info(request, orderid):
 
 @login_required(login_url='/cibusapp1/clogin/')
 def myorder(request):
+	if request.user.user_type == 'R':
+		return HttpResponse("You are not authorised to view this page")
 	context = RequestContext(request)
 	username = request.user.username
 	result = Order.objects.filter(customer__username = username).order_by('status')
@@ -369,17 +382,22 @@ def myorder(request):
 
 @login_required(login_url='/cibusapp1/clogin/')
 def orderinfo(request,orderid):
+	if request.user.user_type == 'R':
+		return HttpResponse("You are not authorised to view this page")
 	context = RequestContext(request)
 	#result = Order.objects.raw('select * from Order where customer__username = %s order by status',username)
 	result = OrderDetails.objects.filter(order__orderid = orderid).order_by('qty')
 	total = 0
 	for r in result:
 		total += r.qty*r.dish.price
-	return render(request, 'cibusapp1/orderdetail.html',{'result':result,'total':total})
+	when = Order.objects.get(orderid = orderid).when
+	return render(request, 'cibusapp1/orderdetail.html',{'result':result,'total':total, 'when':when})
 
 
 @login_required(login_url='/cibusapp1/clogin/')
 def cart(request):
+	if request.user.user_type == 'R':
+		return HttpResponse("You are not authorised to view this page")
 	context = RequestContext(request)
 	cart_form = cartForm()
 	if request.method == 'POST':
@@ -403,6 +421,7 @@ def cart(request):
 		order.orderid = maxId+1
 		order.customer = c
 		order.restaurant = r
+		order.when = datetime.now()
 		order.save()
 		for i in cartData:
 			orderdetail = OrderDetails()
@@ -426,8 +445,10 @@ def cart(request):
 
 		return render(request, 'cibusapp1/cart.html',{'cart_form':cartForm,'result':result,'total':total,'Res':r.first_name,'Add':r.address,'Con':r.contact})
 
-
+@login_required(login_url='/cibusapp1/clogin/')
 def cartinc(request,dishname):
+	if request.user.user_type == 'R':
+		return HttpResponse("You are not authorised to view this page")
 	i=Cart.objects.filter(customer__username = request.user.username, dish__name=dishname ).first()
 	print i 
 	Cart.objects.filter(customer__username = request.user.username, dish__name=dishname ).update(qty=i.qty+1)
@@ -435,8 +456,10 @@ def cartinc(request,dishname):
 	# print 55
 	return redirect("/cibusapp1/customer/cart")
 
-
+@login_required(login_url='/cibusapp1/clogin/')
 def cartdec(request,dishname):
+	if request.user.user_type == 'R':
+		return HttpResponse("You are not authorised to view this page")
 	i=Cart.objects.filter(customer__username = request.user.username, dish__name=dishname ).first()
 	if i.qty==1:
 		Cart.objects.filter(customer__username = request.user.username, dish__name=dishname ).delete()
@@ -448,6 +471,8 @@ def cartdec(request,dishname):
 
 @login_required(login_url='/cibusapp1/clogin/')
 def cedit(request):
+	if request.user.user_type == 'R':
+		return HttpResponse("You are not authorised to view this page")
 	context = RequestContext(request)
 	username = request.user.username
 	customer = CustomUser.objects.filter(username = username).first()
@@ -500,6 +525,8 @@ def cedit(request):
 
 @login_required(login_url='/cibusapp1/rlogin/')
 def redit(request):
+	if request.user.user_type == 'C':
+		return HttpResponse("You are not authorised to view this page")
 	context = RequestContext(request)
 	username = request.user.username
 	customer = CustomUser.objects.filter(username = username).first()
@@ -545,3 +572,65 @@ def redit(request):
 	#         {'user_form': user_form, 'profile_form': profile_form, 'registered': registered},
 	#         context)
 		return render(request, 'cibusapp1/redit.html', {'user_form': user_form})
+
+
+@login_required(login_url='/cibusapp1/clogin/')
+def restalldishselect(request,username,name):
+	if request.user.user_type == 'R':
+		return HttpResponse("You are not authorised to view this page")
+
+	if request.method == 'POST':
+		cdish_form = CDishForm(data=request.POST)
+
+		if cdish_form.is_valid():
+			data = cdish_form.cleaned_data
+			c = Cart()
+			c.customer = request.user
+			c.dish = Menu.objects.filter(restaurant__username = username, name = name).first()
+			c.qty = data["qty"]
+			d = Cart.objects.filter(customer__username = request.user.username)
+			e = [x.dish.restaurant.username for x in d]
+			print e
+			if (len(e) > 0):
+				if (e[0] != username):
+					Cart.objects.filter(customer__username = request.user.username).delete()
+			c.save()
+			# cat_dishes = Menu.objects.filter(restaurant__username = username, category = category)
+			# non_cat_dishes = Menu.objects.filter(restaurant__username = username).exclude(category = category)
+			return redirect('/cibusapp1/customer/restdish/'+username)
+		else:
+			print cdish_form.errors
+			return HttpResponse("Unknown Error")
+	else:
+		cdish_form = CDishForm()
+
+	return render(request, 'cibusapp1/restalldishselect.html', {'cdish_form': cdish_form})
+
+@login_required(login_url='/cibusapp1/clogin/')
+def restalldish(request,username):
+	if request.user.user_type == 'R':
+		return HttpResponse("You are not authorised to view this page")
+	dishes = Menu.objects.filter(restaurant__username = username)
+	print 'loda'
+	return render(request, 'cibusapp1/restalldish.html', {'dishes': dishes, 'username':username})
+
+@login_required(login_url='/cibusapp1/clogin/')
+def reslist(request):
+	context = RequestContext(request)
+	if request.user.user_type == 'R':
+		return HttpResponse("You are not authorised to view this page")
+	cursor = connection.cursor()
+	cursor.execute('SELECT first_name,username,address,contact FROM cibusapp1_CustomUser WHERE user_type==%s ORDER BY %s',['R','first_name'])
+	rows = cursor.fetchall()
+	return render(request, 'cibusapp1/reslist.html',{'result':rows})
+
+
+
+@login_required(login_url='/cibusapp1/rlogin/')
+def restmenu(request):
+	username = request.user.username
+	if request.user.user_type == 'C':
+		return HttpResponse("You are not authorised to view this page")
+
+	dishes = Menu.objects.filter(restaurant__username = username)
+	return render(request, 'cibusapp1/restmenu.html', {'dishes': dishes})
