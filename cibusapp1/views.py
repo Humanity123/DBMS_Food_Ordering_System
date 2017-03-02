@@ -59,8 +59,10 @@ def cregister(request):
 		# Print problems to the terminal.
 		# They'll also be shown to the user.
 		else:
-			return HttpResponse("Error in signup.")
-			print user_form.errors, profile_form.errors
+			# messages.success(request, "Error"+str(user_form.errors))
+			return render(request, 'cibusapp1/cregister.html', {'user_form': user_form, 'registered': registered})
+			# return HttpResponse("Error in signup.")
+			# print user_form.errors, profile_form.errors
 
 	# Not a HTTP POST, so we render our form using two ModelForm instances.
 	# These forms will be blank, ready for user input.
@@ -109,8 +111,8 @@ def rregister(request):
 		# Print problems to the terminal.
 		# They'll also be shown to the user.
 		else:
-			return HttpResponse("Error in signup.")
-			print user_form.errors, profile_form.errors
+			return render(request, 'cibusapp1/rregister.html', {'user_form': user_form, 'registered': registered})
+
 
 	# Not a HTTP POST, so we render our form using two ModelForm instances.
 	# These forms will be blank, ready for user input.
@@ -126,6 +128,7 @@ def rregister(request):
 
 def clogin(request):
 	# Like before, obtain the context for the user's request.
+	# print help(CustomUser)
 	context = RequestContext(request)
 
 	# If the request is a HTTP POST, try to pull out the relevant information.
@@ -216,7 +219,14 @@ def customer(request):
 	if request.user.user_type == 'R':
 		return HttpResponse("You are not authorised to view this page")
 	context = RequestContext(request)
-	return render(request, 'cibusapp1/customer.html', {'Customer':request.user.first_name})
+	cursor = connection.cursor()
+	cursor.execute('SELECT name,first_name from cibusapp1_CustomUser, (SELECT name,restaurant_id from cibusapp1_Menu where category in (SELECT category from cibusapp1_Menu where id in (SELECT dish_id from cibusapp1_OrderDetails where order_id in (select orderid from cibusapp1_Order where customer_id=%s  )) group by category order by count(category) desc limit 1)) where id = restaurant_id',[request.user.id])
+	
+	row=cursor.fetchall()
+
+	for r in row: 
+		print r 
+	return render(request, 'cibusapp1/customer.html', {'Customer':request.user.first_name, 'dishes':row[0:5], 'toprint':len(row)!=0})
 
 
 
@@ -307,7 +317,7 @@ def restdishselect(request,username,category,name):
 			data = cdish_form.cleaned_data
 			c = Cart()
 			c.customer = request.user
-			c.dish = Menu.objects.filter(restaurant__username = username, name = name).first()
+			c.dish = Menu.objects.filter(restaurant__username = username,name = name).first()
 			c.qty = data["qty"]
 			d = Cart.objects.filter(customer__username = request.user.username)
 			e = [x.dish.restaurant.username for x in d]
@@ -430,6 +440,7 @@ def cart(request):
 			orderdetail.order = order
 			orderdetail.save()
 		Cart.objects.filter(customer__username = username).delete()
+		messages.success(request, "Order placed successfully")
 		return redirect("/cibusapp1/customer")
 	else:
 		username = request.user.username

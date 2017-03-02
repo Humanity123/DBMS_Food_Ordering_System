@@ -92,7 +92,7 @@
   </head>
   <header id="header">
       <div class="innertube">
-          {% url 'restaurant' as t_url %}
+          {% url 'customer' as t_url %}
            <a href="{{t_url}}"><h1>Cibus</h1></a>
           <p align="right">{% url 'logout' as t_url %}
   <a href="{{t_url}}" > Logout </a></p>
@@ -101,7 +101,7 @@
 
     <body>
         
-
+      <div style="margin-left:45px; margin-right:45px">
         <div class="post">
         <form id="cdish_form" method="post" action=""
                 enctype="multipart/form-data">
@@ -111,8 +111,9 @@
             {{ cdish_form.as_p}}
 
             <!-- Provide a button to click to submit the form. -->
-            <input type="submit" name="submit" value="Add to Cart" />
+            <input type="submit" name="submit" value="Add to Cart" class="btn btn-info" />
         </form>
+        </div>
         </div>
     </body>
 </html>

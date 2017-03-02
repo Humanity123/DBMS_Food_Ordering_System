@@ -3,14 +3,25 @@ from django.contrib.auth.models import User
 from django import forms
 
 class CustomerForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput())
+    password = forms.CharField(required = True,widget=forms.PasswordInput(attrs={'class' : 'form-control'}))
+    username = forms.CharField(required = True,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    first_name = forms.CharField(required = True,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    last_name = forms.CharField(required = True,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    contact = forms.CharField(required = True,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    address = forms.CharField(required = True,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    email = forms.EmailField(required = True,widget=forms.EmailInput(attrs={'class' : 'form-control'}))
     class Meta:
         model = CustomUser
         fields = ('username', 'email', 'password' ,'first_name','last_name', 'contact','address')
 
 class RestForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput())
-    first_name = forms.CharField(label = 'Name of restaurant', max_length = 20, required = True, widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    password = forms.CharField(required = True,widget=forms.PasswordInput(attrs={'class' : 'form-control'}))
+    username = forms.CharField(required = True,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    first_name = forms.CharField( label="Name of Restaurant" ,required = True,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    # last_name = forms.CharField(required = True,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    contact = forms.CharField(required = True,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    address = forms.CharField(required = True,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    email = forms.EmailField(required = True,widget=forms.EmailInput(attrs={'class' : 'form-control'}))
 
     class Meta:
         model = CustomUser
@@ -67,15 +78,31 @@ class EmptyForm(forms.Form):
 
 
 class CeditForm(forms.ModelForm):
-    password = forms.CharField(min_length = 1, widget=forms.PasswordInput())
-    username = forms.CharField(disabled=True)
+    # password = forms.CharField(min_length = 1, widget=forms.PasswordInput())
+    # username = forms.CharField(disabled=True)
+    password = forms.CharField(min_length = 1,widget=forms.PasswordInput(attrs={'class' : 'form-control'}))
+    username = forms.CharField(disabled=True,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    first_name = forms.CharField(widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    last_name = forms.CharField(widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    contact = forms.CharField(widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    address = forms.CharField(widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class' : 'form-control'})) 
     class Meta:
         model = CustomUser
         fields = ('username','email', 'password' ,'first_name','last_name', 'contact','address')
+
+
 class ReditForm(forms.ModelForm):
-    password = forms.CharField(min_length = 1,widget=forms.PasswordInput())
-    first_name = forms.CharField(label = 'Name of restaurant', max_length = 20, required = True, widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    # password = forms.CharField(min_length = 1,widget=forms.PasswordInput())
+    # first_name = forms.CharField(label = 'Name of restaurant', max_length = 20, required = True, widget=forms.TextInput(attrs={'class' : 'form-control'}))
     username = forms.CharField(disabled=True)
+    password = forms.CharField(min_length = 1,widget=forms.PasswordInput(attrs={'class' : 'form-control'}))
+    username = forms.CharField(disabled=True,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    first_name = forms.CharField( label="Name of Restaurant" ,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    # last_name = forms.CharField(widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    contact = forms.CharField(widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    address = forms.CharField(widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class' : 'form-control'})) 
     class Meta:
         model = CustomUser
         fields = ('username', 'email', 'password', 'first_name', 'contact', 'address')
